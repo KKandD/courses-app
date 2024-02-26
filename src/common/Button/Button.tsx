@@ -3,7 +3,9 @@ import { ButtonProps } from './Button.types';
 
 const Button: React.FC<ButtonProps> = (props) => {
 	return (
-		<button onClick={props.onClick}>{props.buttonText.toUpperCase()}</button>
+		<button type='button' className='btn btn-primary' onClick={props.onClick}>
+			{props.buttonText}
+		</button>
 	);
 };
 

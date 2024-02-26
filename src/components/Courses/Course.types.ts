@@ -7,8 +7,8 @@ export interface Course {
 	id: string;
 	title: string;
 	description: string;
-	duration: string;
-	creationDate: Date;
+	duration: number;
+	creationDate: string;
 	authors: string[];
 }
 
