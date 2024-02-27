@@ -7,7 +7,7 @@ import Courses from './components/Courses/Courses';
 function App() {
 	return (
 		<div className='container-xxl bd-gutter'>
-			<Header name='Unicorn courses' />
+			<Header name='Unicorn Courses' />
 			{mockedCoursesList.length === 0 ? (
 				<EmptyCourseList />
 			) : (

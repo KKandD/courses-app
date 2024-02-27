@@ -1,19 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CourseCard from './components/CourseCard/CourseCard';
-import { Author, Course, CoursesProps } from './Course.types';
+import { Course, CoursesProps } from './Course.types';
 import SearchBar from './components/SearchBar/SearchBar';
 import Button from 'src/common/Button/Button';
 import CourseInfo from '../CourseInfo/CourseInfo';
 
 const Courses: React.FC<CoursesProps> = (props) => {
-	const handleShowCourse = (course: Course) => {
-		console.log('Show course:', course);
-	};
-
 	const courses = props.courses;
 	const authors = props.authors;
 
-	const course0 = props.courses[0];
+	const [viewCourseInfo, setViewCourseInfo] = useState(false);
+	const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+
+	const switchView = (course: Course | null = null) => {
+		if (course) {
+			// Show CourseInfo for the selected course
+			setViewCourseInfo(true);
+			setSelectedCourse(course);
+		} else {
+			// Go back to CourseCard list
+			setViewCourseInfo(false);
+			setSelectedCourse(null);
+		}
+	};
 
 	const getAuthorsForCourse = (course: Course): string => {
 		return authors
@@ -32,16 +41,22 @@ const Courses: React.FC<CoursesProps> = (props) => {
 					<Button buttonText='Add New Course' />
 				</div>
 			</div>
-			<div>
-				<CourseInfo course={course0} authors={getAuthorsForCourse(course0)} />
-			</div>
-			{courses.map((course) => (
-				<CourseCard
-					key={course.id}
-					course={course}
-					authors={getAuthorsForCourse(course)}
+			{viewCourseInfo ? (
+				<CourseInfo
+					course={selectedCourse}
+					authors={getAuthorsForCourse(selectedCourse)}
+					onBack={() => switchView()}
 				/>
-			))}
+			) : (
+				courses.map((course) => (
+					<CourseCard
+						key={course.id}
+						course={course}
+						authors={getAuthorsForCourse(course)}
+						onViewDetails={() => switchView(course)}
+					/>
+				))
+			)}
 		</div>
 	);
 };

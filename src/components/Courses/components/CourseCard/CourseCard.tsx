@@ -2,7 +2,7 @@ import React from 'react';
 import { CourseCardProps } from './CourseCard.types';
 import Button from 'src/common/Button/Button';
 
-const formatDuration = (duration) => {
+export const formatDuration = (duration) => {
 	const hours = Math.floor(duration / 60);
 	const minutes = duration % 60;
 
@@ -32,16 +32,19 @@ const CourseCard: React.FC<CourseCardProps> = (props) => {
 					<div className='col-md-4'>
 						<ul className='list-group list-group-flush'>
 							<li className='list-group-item'>
-								<strong>Authors:</strong> {props.authors}
+								<strong>Authors: </strong>
+								{props.authors}
 							</li>
 							<li className='list-group-item'>
-								<strong>Duration:</strong> {formattedDuration}
+								<strong>Duration: </strong>
+								{formattedDuration}
 							</li>
 							<li className='list-group-item'>
-								<strong>Creation Date:</strong> {props.course.creationDate}
+								<strong>Creation Date: </strong>
+								{props.course.creationDate}
 							</li>
 						</ul>
-						<Button buttonText='Show Course' />
+						<Button buttonText='Show Course' onClick={props.onViewDetails} />
 					</div>
 				</div>
 			</div>

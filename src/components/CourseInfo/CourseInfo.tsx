@@ -1,8 +1,11 @@
 import React from 'react';
 import Button from 'src/common/Button/Button';
 import { CourseInfoProps } from './CourseInfo.types';
+import { formatDuration } from '../Courses/components/CourseCard/CourseCard';
 
 const CourseInfo: React.FC<CourseInfoProps> = (props) => {
+	const formattedDuration = formatDuration(props.course.duration);
+
 	return (
 		<div className='container mt-4'>
 			<div className='row'>
@@ -28,7 +31,7 @@ const CourseInfo: React.FC<CourseInfoProps> = (props) => {
 								<div className='col-md-12'>
 									<p>
 										<strong>Duration: </strong>
-										{props.course.duration}
+										{formattedDuration}
 									</p>
 								</div>
 								<div className='col-md-12'>
@@ -50,7 +53,7 @@ const CourseInfo: React.FC<CourseInfoProps> = (props) => {
 			</div>
 			<div className='row mt-3'>
 				<div className='col-md-12 d-flex justify-content-end'>
-					<Button buttonText='Back' />
+					<Button buttonText='Back' onClick={props.onBack} />
 				</div>
 			</div>
 		</div>
