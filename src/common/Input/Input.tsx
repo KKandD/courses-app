@@ -1,15 +1,27 @@
 import React from 'react';
 
-const Input = () => {
+interface InputProps {
+	labelText: string;
+	placeholderText: string;
+	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const Input: React.FC<InputProps> = ({
+	labelText,
+	placeholderText,
+	onChange,
+}) => {
 	return (
-		<form className='mb-3 mb-lg-0 me-lg-3' role='search'>
+		<div className='mb-3 mb-lg-0 me-lg-3'>
 			<input
-				type='search'
+				type='text'
 				className='form-control'
-				placeholder='Search...'
-				aria-label='Search'
+				id={labelText}
+				placeholder={placeholderText}
+				onChange={onChange}
+				required
 			/>
-		</form>
+		</div>
 	);
 };
 

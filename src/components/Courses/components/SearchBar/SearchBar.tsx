@@ -6,7 +6,11 @@ const SearchBar = () => {
 	return (
 		<div className='row justify-content-start'>
 			<div className='col-md-6'>
-				<Input />
+				<Input
+					labelText='search'
+					placeholderText='Search'
+					onChange={undefined}
+				/>
 			</div>
 			<div className='col-md-4'>
 				<Button buttonText='Search' />

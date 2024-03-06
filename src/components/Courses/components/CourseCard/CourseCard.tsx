@@ -1,23 +1,11 @@
 import React from 'react';
 import { CourseCardProps } from './CourseCard.types';
 import Button from 'src/common/Button/Button';
-
-export const formatDuration = (duration) => {
-	const hours = Math.floor(duration / 60);
-	const minutes = duration % 60;
-
-	const formattedHours = hours < 10 ? '0' + hours : hours;
-	const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
-
-	if (hours === 1) {
-		return `${formattedHours}:${formattedMinutes} hour`;
-	} else {
-		return `${formattedHours}:${formattedMinutes} hours`;
-	}
-};
+import { Link } from 'react-router-dom';
+import { getCourseDuration } from 'src/helpers/getCourseDuration';
 
 const CourseCard: React.FC<CourseCardProps> = (props) => {
-	const formattedDuration = formatDuration(props.course.duration);
+	const formattedDuration = getCourseDuration(props.course.duration);
 
 	return (
 		<div className='card my-5'>
@@ -44,7 +32,9 @@ const CourseCard: React.FC<CourseCardProps> = (props) => {
 								{props.course.creationDate}
 							</li>
 						</ul>
-						<Button buttonText='Show Course' onClick={props.onViewDetails} />
+						<Link to={`/courses/${props.course.id}`}>
+							<Button buttonText='Show Course' />
+						</Link>
 					</div>
 				</div>
 			</div>
