@@ -1,16 +1,20 @@
 import React from 'react';
 import Button from 'src/common/Button/Button';
 import { CourseInfoProps } from './CourseInfo.types';
-import { formatDuration } from '../Courses/components/CourseCard/CourseCard';
+import { Link, useParams } from 'react-router-dom';
+import { getCourseDuration } from 'src/helpers/getCourseDuration';
+import { getAuthorsForCourse } from 'src/helpers/getAuthorsForCourse';
 
 const CourseInfo: React.FC<CourseInfoProps> = (props) => {
-	const formattedDuration = formatDuration(props.course.duration);
+	const { courseId } = useParams();
+	const course = props.courses.find((c) => c.id === courseId);
+	const formattedDuration = getCourseDuration(course.duration);
 
 	return (
 		<div className='container mt-4'>
 			<div className='row'>
 				<div className='col-md-8'>
-					<h2 className='fw-bold'>{props.course.title}</h2>
+					<h2 className='fw-bold'>{course.title}</h2>
 				</div>
 			</div>
 			<div className='card border-secondary mt-3'>
@@ -18,14 +22,14 @@ const CourseInfo: React.FC<CourseInfoProps> = (props) => {
 					<div className='row'>
 						<div className='col-md-8'>
 							<h5 className='card-title fw-bold'>Description:</h5>
-							<p className='card-text'>{props.course.description}</p>
+							<p className='card-text'>{course.description}</p>
 						</div>
 						<div className='col-md-4 border-start'>
 							<div className='row'>
 								<div className='col-md-12'>
 									<p>
 										<strong>ID: </strong>
-										{props.course.id}
+										{course.id}
 									</p>
 								</div>
 								<div className='col-md-12'>
@@ -37,13 +41,13 @@ const CourseInfo: React.FC<CourseInfoProps> = (props) => {
 								<div className='col-md-12'>
 									<p>
 										<strong>Created: </strong>
-										{props.course.creationDate}
+										{course.creationDate}
 									</p>
 								</div>
 								<div className='col-md-12'>
 									<p>
 										<strong>Authors: </strong>
-										{props.authors}
+										{getAuthorsForCourse(course, props.authors)}
 									</p>
 								</div>
 							</div>
@@ -53,7 +57,9 @@ const CourseInfo: React.FC<CourseInfoProps> = (props) => {
 			</div>
 			<div className='row mt-3'>
 				<div className='col-md-12 d-flex justify-content-end'>
-					<Button buttonText='Back' onClick={props.onBack} />
+					<Link to='/courses'>
+						<Button buttonText='Back' />
+					</Link>
 				</div>
 			</div>
 		</div>

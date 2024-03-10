@@ -4,32 +4,12 @@ import { Course, CoursesProps } from './Course.types';
 import SearchBar from './components/SearchBar/SearchBar';
 import Button from 'src/common/Button/Button';
 import CourseInfo from '../CourseInfo/CourseInfo';
+import { getAuthorsForCourse } from 'src/helpers/getAuthorsForCourse';
+import { Link } from 'react-router-dom';
 
 const Courses: React.FC<CoursesProps> = (props) => {
 	const courses = props.courses;
 	const authors = props.authors;
-
-	const [viewCourseInfo, setViewCourseInfo] = useState(false);
-	const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
-
-	const switchView = (course: Course | null = null) => {
-		if (course) {
-			// Show CourseInfo for the selected course
-			setViewCourseInfo(true);
-			setSelectedCourse(course);
-		} else {
-			// Go back to CourseCard list
-			setViewCourseInfo(false);
-			setSelectedCourse(null);
-		}
-	};
-
-	const getAuthorsForCourse = (course: Course): string => {
-		return authors
-			.filter((author) => course.authors.includes(author.id))
-			.map((author) => author.name)
-			.join(', ');
-	};
 
 	return (
 		<div className='courses-list'>
@@ -38,25 +18,18 @@ const Courses: React.FC<CoursesProps> = (props) => {
 					<SearchBar />
 				</div>
 				<div className='col-md-2 d-flex justify-content-end'>
-					<Button buttonText='Add New Course' />
+					<Link to='/courses/add'>
+						<Button buttonText='Add New Course' />
+					</Link>
 				</div>
 			</div>
-			{viewCourseInfo ? (
-				<CourseInfo
-					course={selectedCourse}
-					authors={getAuthorsForCourse(selectedCourse)}
-					onBack={() => switchView()}
+			{courses.map((course) => (
+				<CourseCard
+					key={course.id}
+					course={course}
+					authors={getAuthorsForCourse(course, authors)}
 				/>
-			) : (
-				courses.map((course) => (
-					<CourseCard
-						key={course.id}
-						course={course}
-						authors={getAuthorsForCourse(course)}
-						onViewDetails={() => switchView(course)}
-					/>
-				))
-			)}
+			))}
 		</div>
 	);
 };
