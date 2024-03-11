@@ -1,6 +1,7 @@
-import { Author, Course } from '../Courses/Course.types';
+import { AuthorType } from 'src/store/authors/types';
+import { CourseType } from 'src/store/courses/types';
 
 export interface CourseInfoProps {
-	courses: Course[];
-	authors: Author[];
+	courses: CourseType[];
+	authors: AuthorType[];
 }

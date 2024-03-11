@@ -1,6 +1,6 @@
-import { Course } from '../../Course.types';
+import { CourseType } from 'src/store/courses/types';
 
 export interface CourseCardProps {
-	course: Course;
+	course: CourseType;
 	authors: string;
 }

@@ -1,14 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { HeaderProps } from './Header.types';
+import React from 'react';
 import Logo from '../Logo/Logo';
 import Button from '../../common/Button/Button';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { logoutUserAction } from '../../store/user/actions';
+import { RootState } from '../../store/rootReducer';
 
-const Header: React.FC<HeaderProps> = (props) => {
+interface HeaderProps {
+	isAuthenticated: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({ isAuthenticated }) => {
 	const navigate = useNavigate();
 	const location = useLocation();
+	const dispatch = useDispatch();
+	const user = useSelector((state: RootState) => state.user);
 
 	const handleLogout = () => {
+		dispatch(logoutUserAction());
 		localStorage.removeItem('userToken');
 		navigate('/login');
 	};
@@ -24,17 +33,15 @@ const Header: React.FC<HeaderProps> = (props) => {
 					className='d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none'
 				>
 					<Logo />
-					<span className='fs-4'>{props.name}</span>
+					<span className='fs-4'>Unicorn Courses</span>
 				</a>
 
 				{!isLoginPage && (
 					<ul className='nav nav-pills'>
 						<li className='nav-item'>
-							{props.isAuthenticated ? (
+							{isAuthenticated ? (
 								<div className='d-flex align-items-center'>
-									<p className='mb-0 me-3'>
-										{localStorage.getItem('userName')}
-									</p>
+									<p className='mb-0 me-3'>{user.name}</p>
 									<Button buttonText='Logout' onClick={handleLogout} />
 								</div>
 							) : (

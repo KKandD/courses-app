@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { registerUser } from '../../services';
 
 const Registration = () => {
 	const [newUser, setNewUser] = useState({
@@ -33,15 +34,7 @@ const Registration = () => {
 		}
 
 		try {
-			const response = await fetch('http://localhost:4000/register', {
-				method: 'POST',
-				body: JSON.stringify(newUser),
-				headers: {
-					'Content-Type': 'application/json',
-				},
-			});
-
-			const result = await response.json();
+			const result = await registerUser(newUser);
 
 			if (result.successful) {
 				navigate('/login');

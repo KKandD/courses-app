@@ -1,13 +1,17 @@
 import React from 'react';
 import Button from 'src/common/Button/Button';
-import { CourseInfoProps } from './CourseInfo.types';
 import { Link, useParams } from 'react-router-dom';
 import { getCourseDuration } from 'src/helpers/getCourseDuration';
 import { getAuthorsForCourse } from 'src/helpers/getAuthorsForCourse';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/rootReducer';
 
-const CourseInfo: React.FC<CourseInfoProps> = (props) => {
+const CourseInfo = () => {
 	const { courseId } = useParams();
-	const course = props.courses.find((c) => c.id === courseId);
+	const courses = useSelector((state: RootState) => state.courses);
+	const authors = useSelector((state: RootState) => state.authors);
+
+	const course = courses.find((c) => c.id === courseId);
 	const formattedDuration = getCourseDuration(course.duration);
 
 	return (
@@ -47,7 +51,7 @@ const CourseInfo: React.FC<CourseInfoProps> = (props) => {
 								<div className='col-md-12'>
 									<p>
 										<strong>Authors: </strong>
-										{getAuthorsForCourse(course, props.authors)}
+										{getAuthorsForCourse(course, authors)}
 									</p>
 								</div>
 							</div>

@@ -1,11 +1,20 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { CourseCardProps } from './CourseCard.types';
 import Button from 'src/common/Button/Button';
 import { Link } from 'react-router-dom';
 import { getCourseDuration } from 'src/helpers/getCourseDuration';
+import { deleteCourseAction } from '../../../../store/courses/actions';
 
 const CourseCard: React.FC<CourseCardProps> = (props) => {
+	const dispatch = useDispatch();
 	const formattedDuration = getCourseDuration(props.course.duration);
+
+	const handleDeleteCourse = () => {
+		dispatch(deleteCourseAction(props.course.id));
+	};
+
+	// The Update button has no functionality in this module, it will be added in the next module
 
 	return (
 		<div className='card my-5'>
@@ -32,9 +41,17 @@ const CourseCard: React.FC<CourseCardProps> = (props) => {
 								{props.course.creationDate}
 							</li>
 						</ul>
-						<Link to={`/courses/${props.course.id}`}>
-							<Button buttonText='Show Course' />
-						</Link>
+						<div className='d-flex mt-3'>
+							<Link to={`/courses/${props.course.id}`} className='mx-2'>
+								<Button buttonText='Show Course' />
+							</Link>
+							<Button
+								buttonText='Delete'
+								onClick={handleDeleteCourse}
+								className='mx-2 btn-danger'
+							/>
+							<Button buttonText='Update' className='mx-2 btn-warning' />
+						</div>
 					</div>
 				</div>
 			</div>

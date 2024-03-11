@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setUserAction } from '../../store/user/actions';
+import { loginUser } from '../../services';
 
 const Login = () => {
 	const [loginData, setLoginData] = useState({
@@ -14,6 +17,7 @@ const Login = () => {
 
 	const [errorMessage, setErrorMessage] = useState('');
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	const handleLogin = async (event) => {
 		event.preventDefault();
@@ -30,19 +34,12 @@ const Login = () => {
 		}
 
 		try {
-			const response = await fetch('http://localhost:4000/login', {
-				method: 'POST',
-				body: JSON.stringify(loginData),
-				headers: {
-					'Content-Type': 'application/json',
-				},
-			});
+			const result = await loginUser(loginData);
 
-			const result = await response.json();
+			dispatch(setUserAction(result));
 
 			if (result.successful) {
-				localStorage.setItem('userToken', result.userToken);
-				localStorage.setItem('userName', result.user.name);
+				localStorage.setItem('userToken', result);
 				navigate('/courses');
 			} else {
 				setErrorMessage('Invalid credentials. Please try again.');

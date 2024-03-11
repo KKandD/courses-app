@@ -2,18 +2,29 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../common/Button/Button';
 import { getCourseDuration } from 'src/helpers/getCourseDuration';
-import { Author, Course, CoursesProps } from '../Courses/Course.types';
+import { Course } from '../Courses/Course.types';
 import { v4 as uuidv4 } from 'uuid';
+import { AuthorType } from 'src/store/authors/types';
+import {
+	addNewCourseAction,
+	saveCoursesAction,
+} from '../../store/courses/actions';
+import { saveAuthorsAction } from '../../store/authors/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../store/rootReducer';
 
-const CreateCourse: React.FC<CoursesProps> = (props) => {
+const CreateCourse = () => {
+	const dispatch = useDispatch();
 	const navigate = useNavigate();
+
+	const authors = useSelector((state: RootState) => state.authors);
 
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
 	const [duration, setDuration] = useState(0);
 	const [authorName, setAuthorName] = useState('');
-	const [authorsList, setAuthorsList] = useState<Author[]>([]);
-	const [courseAuthorsList, setCourseAuthorsList] = useState<Author[]>([]);
+	const [authorsList, setAuthorsList] = useState<AuthorType[]>([]);
+	const [courseAuthorsList, setCourseAuthorsList] = useState<AuthorType[]>([]);
 
 	const [validationErrors, setValidationErrors] = useState({
 		title: '',
@@ -24,7 +35,7 @@ const CreateCourse: React.FC<CoursesProps> = (props) => {
 
 	const handleAddAuthor = () => {
 		if (authorName.length >= 2) {
-			const existingAuthor = props.authors.find(
+			const existingAuthor = authors.find(
 				(author) => author.name.toLowerCase() === authorName.toLowerCase()
 			);
 
@@ -37,12 +48,12 @@ const CreateCourse: React.FC<CoursesProps> = (props) => {
 					setCourseAuthorsList([...courseAuthorsList, existingAuthor]);
 				}
 			} else {
-				const newAuthor: Author = {
+				const newAuthor: AuthorType = {
 					id: uuidv4(),
 					name: authorName,
 				};
 
-				props.authors.push(newAuthor);
+				dispatch(saveAuthorsAction([...authors, newAuthor]));
 				setCourseAuthorsList([...courseAuthorsList, newAuthor]);
 			}
 
@@ -63,9 +74,7 @@ const CreateCourse: React.FC<CoursesProps> = (props) => {
 	};
 
 	const handleAddToCourseAuthors = (authorId) => {
-		const selectedAuthor = props.authors.find(
-			(author) => author.id === authorId
-		);
+		const selectedAuthor = authors.find((author) => author.id === authorId);
 		if (selectedAuthor) {
 			const isAuthorInCourse = courseAuthorsList.some(
 				(author) => author.id === selectedAuthor.id
@@ -101,7 +110,8 @@ const CreateCourse: React.FC<CoursesProps> = (props) => {
 			authors: courseAuthorsList.map((author) => author.id),
 		};
 
-		props.courses.push(newCourse);
+		//dispatch(saveAuthorsAction([...authors, ...courseAuthorsList]));
+		dispatch(addNewCourseAction(newCourse));
 
 		navigate('/courses');
 	};
@@ -201,11 +211,11 @@ const CreateCourse: React.FC<CoursesProps> = (props) => {
 								<div>
 									<h5 className='my-4'>Authors List:</h5>
 									<div className='col-12'>
-										{props.authors.length === 0 ? (
+										{authors.length === 0 ? (
 											<p>Authors list is empty</p>
 										) : (
 											<ul>
-												{props.authors.map((author) => (
+												{authors.map((author) => (
 													<li key={author.id}>
 														{author.name}
 														<button
