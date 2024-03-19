@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import CourseCard from './components/CourseCard/CourseCard';
-import { Course, CoursesProps } from './Course.types';
 import SearchBar from './components/SearchBar/SearchBar';
 import Button from 'src/common/Button/Button';
-import CourseInfo from '../CourseInfo/CourseInfo';
 import { getAuthorsForCourse } from 'src/helpers/getAuthorsForCourse';
 import { Link } from 'react-router-dom';
+import { RootState } from '../../store/rootReducer';
+import { useSelector } from 'react-redux';
 
-const Courses: React.FC<CoursesProps> = (props) => {
-	const courses = props.courses;
-	const authors = props.authors;
+const Courses = () => {
+	const courses = useSelector((state: RootState) => state.courses);
+	const authors = useSelector((state: RootState) => state.authors);
 
 	return (
 		<div className='courses-list'>

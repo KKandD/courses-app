@@ -1,8 +1,9 @@
-import { Author, Course } from 'src/components/Courses/Course.types';
+import { AuthorType } from 'src/store/authors/types';
+import { CourseType } from 'src/store/courses/types';
 
 export const getAuthorsForCourse = (
-	course: Course,
-	authors: Author[]
+	course: CourseType,
+	authors: AuthorType[]
 ): string => {
 	return authors
 		.filter((author) => course.authors.includes(author.id))

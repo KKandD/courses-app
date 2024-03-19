@@ -1,6 +1,9 @@
+import { AuthorType } from 'src/store/authors/types';
+import { CourseType } from 'src/store/courses/types';
+
 export interface CoursesProps {
-	courses: Course[];
-	authors: Author[];
+	courses: CourseType[];
+	authors: AuthorType[];
 }
 
 export interface Course {
@@ -10,9 +13,4 @@ export interface Course {
 	duration: number;
 	creationDate: string;
 	authors: string[];
-}
-
-export interface Author {
-	id: string;
-	name: string;
 }
