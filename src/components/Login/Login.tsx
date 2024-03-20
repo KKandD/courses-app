@@ -39,7 +39,7 @@ const Login = () => {
 			dispatch(setUserAction(result));
 
 			if (result.successful) {
-				localStorage.setItem('userToken', result);
+				localStorage.setItem('userToken', result.result);
 				navigate('/courses');
 			} else {
 				setErrorMessage('Invalid credentials. Please try again.');

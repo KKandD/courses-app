@@ -1,23 +1,42 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Button from '../../common/Button/Button';
 import { getCourseDuration } from 'src/helpers/getCourseDuration';
 import { Course } from '../Courses/Course.types';
-import { v4 as uuidv4 } from 'uuid';
 import { AuthorType } from 'src/store/authors/types';
-import {
-	addNewCourseAction,
-	saveCoursesAction,
-} from '../../store/courses/actions';
-import { saveAuthorsAction } from '../../store/authors/actions';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../../store/rootReducer';
+import {
+	addNewCourseThunk,
+	fetchCoursesThunk,
+	updateCourseThunk,
+} from 'src/store/courses/thunk';
+import store from '../../../src/store/index.js';
+import { addNewAuthorThunk } from 'src/store/authors/thunk';
+import { UpdateCourseType } from 'src/store/courses/types';
 
-const CreateCourse = () => {
-	const dispatch = useDispatch();
+const CourseForm = () => {
 	const navigate = useNavigate();
+	const { courseId } = useParams();
+	const courses = useSelector((state: RootState) => state.courses);
+
+	useEffect(() => {
+		if (courseId) {
+			const course = courses.find((c) => c.id === courseId);
+			if (course !== null) {
+				setTitle(course.title);
+				setDescription(course.description);
+				setDuration(course.duration);
+				const courseAuthors = course.authors.map((authorId) =>
+					authors.find((author) => author.id === authorId)
+				);
+				setCourseAuthorsList(courseAuthors);
+			}
+		}
+	}, [courseId]);
 
 	const authors = useSelector((state: RootState) => state.authors);
+	const token = useSelector((state: RootState) => state.user.token);
 
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
@@ -49,11 +68,13 @@ const CreateCourse = () => {
 				}
 			} else {
 				const newAuthor: AuthorType = {
-					id: uuidv4(),
+					id: '',
 					name: authorName,
 				};
 
-				dispatch(saveAuthorsAction([...authors, newAuthor]));
+				//dispatch(saveAuthorsAction([...authors, newAuthor]));
+				//dispatch(addNewAuthorAction(newAuthor));
+				store.dispatch(addNewAuthorThunk(newAuthor, token));
 				setCourseAuthorsList([...courseAuthorsList, newAuthor]);
 			}
 
@@ -86,7 +107,7 @@ const CreateCourse = () => {
 		}
 	};
 
-	const handleCreateCourse = () => {
+	const handleSaveCourse = () => {
 		const errors = {
 			title: title.trim() === '' ? 'Title is required' : '',
 			description: description.trim() === '' ? 'Description is required' : '',
@@ -102,7 +123,7 @@ const CreateCourse = () => {
 		}
 
 		const newCourse: Course = {
-			id: uuidv4(),
+			id: '',
 			title,
 			description,
 			duration,
@@ -110,9 +131,22 @@ const CreateCourse = () => {
 			authors: courseAuthorsList.map((author) => author.id),
 		};
 
-		//dispatch(saveAuthorsAction([...authors, ...courseAuthorsList]));
-		dispatch(addNewCourseAction(newCourse));
+		if (courseId) {
+			const updatedCourse: UpdateCourseType = {
+				title,
+				description,
+				duration,
+				authors: courseAuthorsList.map((author) => author.id),
+			};
 
+			store.dispatch(updateCourseThunk(courseId, updatedCourse, token));
+		} else {
+			//dispatch(saveAuthorsAction([...authors, ...courseAuthorsList]));
+			//dispatch(addNewCourseAction(newCourse));
+			store.dispatch(addNewCourseThunk(newCourse, token));
+		}
+
+		store.dispatch(fetchCoursesThunk());
 		navigate('/courses');
 	};
 
@@ -215,8 +249,8 @@ const CreateCourse = () => {
 											<p>Authors list is empty</p>
 										) : (
 											<ul>
-												{authors.map((author) => (
-													<li key={author.id}>
+												{authors.map((author, index) => (
+													<li key={author.id || index}>
 														{author.name}
 														<button
 															className='btn btn-outline-success btn-sm ms-2'
@@ -264,10 +298,7 @@ const CreateCourse = () => {
 								<Link to='/courses' className='mx-3'>
 									<Button buttonText='Cancel' />
 								</Link>
-								<Button
-									buttonText='Create Course'
-									onClick={handleCreateCourse}
-								/>
+								<Button buttonText='Save Course' onClick={handleSaveCourse} />
 							</div>
 						</div>
 					</form>
@@ -277,4 +308,4 @@ const CreateCourse = () => {
 	);
 };
 
-export default CreateCourse;
+export default CourseForm;

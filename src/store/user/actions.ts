@@ -1,8 +1,13 @@
-import { UserActionTypes, UserResponse } from './types';
+import { UserActionTypes, UserLoginResponse, UserResponse } from './types';
 
 export const setUserAction = (userData: UserResponse) => ({
 	type: UserActionTypes.SET_USER,
 	payload: userData,
+});
+
+export const loginUserAction = (loginData: UserLoginResponse) => ({
+	type: UserActionTypes.LOGIN_USER,
+	payload: loginData,
 });
 
 export const registerUserAction = () => ({

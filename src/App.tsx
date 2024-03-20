@@ -13,40 +13,44 @@ import {
 import Login from './components/Login/Login';
 import Registration from './components/Registration/Registration';
 import CourseInfo from './components/CourseInfo/CourseInfo';
-import CreateCourse from './components/CreateCourse/CreateCourse';
-import { saveCoursesAction } from '../src/store/courses/actions';
-import { saveAuthorsAction } from '../src/store/authors/actions';
-import { useDispatch } from 'react-redux';
-import { fetchCourses, fetchAuthors } from '../src/services';
+import CourseForm from './components/CourseForm/CourseForm';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCoursesThunk } from '../src/store/courses/thunk';
+import { fetchAuthorsThunk } from '../src/store/authors/thunk';
 import { RootState } from '../src/store/rootReducer';
+import store from '../src/store/index.js';
+import { fetchCurrentUserThunk } from './store/user/thunk';
+import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 
 function App() {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const dispatch = useDispatch();
-	const [isAuthenticated, setIsAuthenticated] = useState(
-		!!localStorage.getItem('userToken')
-	);
+	const [isAuthenticated, setIsAuthenticated] = useState(false);
+	const user = useSelector((state: RootState) => state.user);
 
 	useEffect(() => {
-		fetchCourses()
-			.then((coursesData) => dispatch(saveCoursesAction(coursesData)))
-			.catch((error) => console.error('Error fetching courses:', error));
-
-		fetchAuthors()
-			.then((authorsData) => dispatch(saveAuthorsAction(authorsData)))
-			.catch((error) => console.error('Error fetching authors:', error));
+		//store.dispatch(fetchCoursesThunk());
+		//store.dispatch(fetchAuthorsThunk());
+		//store.dispatch(fetchCurrentUserThunk());
 	}, [dispatch]);
 
 	useEffect(() => {
-		const token = localStorage.getItem('userToken');
-		console.log('token: ' + token);
-
-		if (!token && location.pathname !== '/registration') {
-			navigate('/login');
+		if (user.token) {
+			setIsAuthenticated(true);
+		} else {
+			setIsAuthenticated(false);
+			if (location.pathname !== '/registration') {
+				navigate('/login');
+			}
 		}
-		setIsAuthenticated(!!token);
-	}, [navigate, location.pathname]);
+	}, [user.token]);
+
+	// useEffect(() => {
+	// 	if (isAuthenticated && user.name && user.email && user.role) {
+	// 		navigate('/courses');
+	// 	}
+	// }, [isAuthenticated, user, navigate]);
 
 	return (
 		<div className='container-xxl bd-gutter'>
@@ -59,7 +63,22 @@ function App() {
 					}
 				/>
 				<Route path='/courses/:courseId' element={<CourseInfo />} />
-				<Route path='/courses/add' element={<CreateCourse />} />
+				<Route
+					path='/courses/update/:courseId'
+					element={
+						<PrivateRoute>
+							<CourseForm />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path='/courses/add'
+					element={
+						<PrivateRoute>
+							<CourseForm />
+						</PrivateRoute>
+					}
+				/>
 				<Route path='/login' element={<Login />} />
 				<Route path='/registration' element={<Registration />} />
 				<Route path='*' element={<Navigate to='/courses' />} />

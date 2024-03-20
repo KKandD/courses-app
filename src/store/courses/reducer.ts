@@ -13,7 +13,12 @@ export function coursesReducer(
 			return [...state, action.payload];
 		case CoursesActionTypes.DELETE_COURSE:
 			return state.filter((course) => course.id !== action.payload);
-
+		case CoursesActionTypes.UPDATE_COURSE:
+			return state.map((course) =>
+				course.id === action.payload.courseId
+					? { ...course, ...action.payload.courseData }
+					: course
+			);
 		default:
 			return state;
 	}

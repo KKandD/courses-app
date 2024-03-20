@@ -5,6 +5,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUserAction } from '../../store/user/actions';
 import { RootState } from '../../store/rootReducer';
+import { logoutUser } from '../../services';
 
 interface HeaderProps {
 	isAuthenticated: boolean;
@@ -16,10 +17,15 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated }) => {
 	const dispatch = useDispatch();
 	const user = useSelector((state: RootState) => state.user);
 
-	const handleLogout = () => {
-		dispatch(logoutUserAction());
-		localStorage.removeItem('userToken');
-		navigate('/login');
+	const handleLogout = async () => {
+		try {
+			await logoutUser(user.token);
+			dispatch(logoutUserAction());
+			localStorage.removeItem('userToken');
+			navigate('/login');
+		} catch (error) {
+			console.error('Logout error:', error);
+		}
 	};
 
 	const isLoginPage =
