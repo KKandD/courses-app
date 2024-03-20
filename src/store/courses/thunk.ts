@@ -13,7 +13,7 @@ export const addNewCourseThunk = (courseData, token: string) => {
 		try {
 			const newCourse = await addNewCourse(courseData, token);
 			dispatch({
-				type: CoursesActionTypes.DELETE_COURSE,
+				type: CoursesActionTypes.ADD_COURSE,
 				payload: newCourse,
 				token,
 			});

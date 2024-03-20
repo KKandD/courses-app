@@ -122,15 +122,6 @@ const CourseForm = () => {
 			return;
 		}
 
-		const newCourse: Course = {
-			id: '',
-			title,
-			description,
-			duration,
-			creationDate: new Date().toLocaleDateString('en-US'),
-			authors: courseAuthorsList.map((author) => author.id),
-		};
-
 		if (courseId) {
 			const updatedCourse: UpdateCourseType = {
 				title,
@@ -138,15 +129,24 @@ const CourseForm = () => {
 				duration,
 				authors: courseAuthorsList.map((author) => author.id),
 			};
-
+			console.log('updating course');
 			store.dispatch(updateCourseThunk(courseId, updatedCourse, token));
 		} else {
+			const newCourse: Course = {
+				id: '',
+				title,
+				description,
+				duration,
+				creationDate: new Date().toLocaleDateString('en-US'),
+				authors: courseAuthorsList.map((author) => author.id),
+			};
 			//dispatch(saveAuthorsAction([...authors, ...courseAuthorsList]));
 			//dispatch(addNewCourseAction(newCourse));
 			store.dispatch(addNewCourseThunk(newCourse, token));
+			console.log('creating course');
 		}
 
-		store.dispatch(fetchCoursesThunk());
+		//store.dispatch(fetchCoursesThunk());
 		navigate('/courses');
 	};
 

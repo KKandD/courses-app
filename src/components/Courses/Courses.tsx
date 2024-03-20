@@ -20,7 +20,6 @@ const Courses = () => {
 	useEffect(() => {
 		store.dispatch(fetchCoursesThunk());
 		store.dispatch(fetchAuthorsThunk());
-		//store.dispatch(fetchCurrentUserThunk());
 	}, [dispatch]);
 
 	useEffect(() => {

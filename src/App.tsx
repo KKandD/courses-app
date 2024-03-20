@@ -27,17 +27,13 @@ function App() {
 	const location = useLocation();
 	const dispatch = useDispatch();
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
+	const courses = useSelector((state: RootState) => state.courses);
 	const user = useSelector((state: RootState) => state.user);
-
-	useEffect(() => {
-		//store.dispatch(fetchCoursesThunk());
-		//store.dispatch(fetchAuthorsThunk());
-		//store.dispatch(fetchCurrentUserThunk());
-	}, [dispatch]);
 
 	useEffect(() => {
 		if (user.token) {
 			setIsAuthenticated(true);
+			store.dispatch(fetchCurrentUserThunk(user.token));
 		} else {
 			setIsAuthenticated(false);
 			if (location.pathname !== '/registration') {
@@ -58,9 +54,7 @@ function App() {
 			<Routes>
 				<Route
 					path='/courses/*'
-					element={
-						mockedCoursesList.length === 0 ? <EmptyCourseList /> : <Courses />
-					}
+					element={courses.length === 0 ? <EmptyCourseList /> : <Courses />}
 				/>
 				<Route path='/courses/:courseId' element={<CourseInfo />} />
 				<Route
