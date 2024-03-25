@@ -1,20 +1,21 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { CourseCardProps } from './CourseCard.types';
 import Button from 'src/common/Button/Button';
 import { Link } from 'react-router-dom';
 import { getCourseDuration } from 'src/helpers/getCourseDuration';
-import { deleteCourseAction } from '../../../../store/courses/actions';
+import { RootState } from '../../../../store/rootReducer';
+import { deleteCourseThunk } from '../../../../store/courses/thunk';
+import { useAppDispatch } from 'src/hooks';
 
 const CourseCard: React.FC<CourseCardProps> = (props) => {
-	const dispatch = useDispatch();
 	const formattedDuration = getCourseDuration(props.course.duration);
+	const user = useSelector((state: RootState) => state.user);
+	const appDispatch = useAppDispatch();
 
 	const handleDeleteCourse = () => {
-		dispatch(deleteCourseAction(props.course.id));
+		appDispatch(deleteCourseThunk(props.course.id, user.token));
 	};
-
-	// The Update button has no functionality in this module, it will be added in the next module
 
 	return (
 		<div className='card my-5'>
@@ -45,12 +46,21 @@ const CourseCard: React.FC<CourseCardProps> = (props) => {
 							<Link to={`/courses/${props.course.id}`} className='mx-2'>
 								<Button buttonText='Show Course' />
 							</Link>
-							<Button
-								buttonText='Delete'
-								onClick={handleDeleteCourse}
-								className='mx-2 btn-danger'
-							/>
-							<Button buttonText='Update' className='mx-2 btn-warning' />
+							{user.role === 'admin' && (
+								<div>
+									<Button
+										buttonText='Delete'
+										onClick={handleDeleteCourse}
+										className='mx-2 btn-danger'
+									/>
+									<Link
+										to={`/courses/update/${props.course.id}`}
+										className='mx-2'
+									>
+										<Button buttonText='Update' className='mx-2 btn-warning' />
+									</Link>
+								</div>
+							)}
 						</div>
 					</div>
 				</div>

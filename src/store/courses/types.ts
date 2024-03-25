@@ -7,9 +7,17 @@ export type CourseType = {
 	authors: string[];
 };
 
+export interface UpdateCourseType {
+	title: string;
+	description: string;
+	duration: number;
+	authors: string[];
+}
+
 export const enum CoursesActionTypes {
 	SAVE_COURSES = 'SAVE_COURSES',
 	ADD_COURSE = 'ADD_COURSE',
+	UPDATE_COURSE = 'UPDATE_COURSE',
 	DELETE_COURSE = 'DELETE_COURSE',
 }
 
@@ -23,9 +31,18 @@ export interface AddCourse {
 	payload: CourseType;
 }
 
+export interface UpdateCourse {
+	type: CoursesActionTypes.UPDATE_COURSE;
+	payload: { courseId: string; courseData: UpdateCourseType; token: string };
+}
+
 export interface DeleteCourse {
 	type: CoursesActionTypes.DELETE_COURSE;
 	payload: string;
 }
 
-export type CoursesAction = SaveCourses | AddCourse | DeleteCourse;
+export type CoursesAction =
+	| SaveCourses
+	| AddCourse
+	| UpdateCourse
+	| DeleteCourse;
