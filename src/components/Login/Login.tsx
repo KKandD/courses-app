@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import { setUserAction } from '../../store/user/actions';
 import { loginUser } from '../../services';
 import { fetchCurrentUserThunk } from 'src/store/user/thunk';
-import store from '../../../src/store/index.js';
+import { useAppDispatch } from 'src/hooks';
 
 const Login = () => {
 	const [loginData, setLoginData] = useState({
@@ -19,7 +18,7 @@ const Login = () => {
 
 	const [errorMessage, setErrorMessage] = useState('');
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
+	const appDispatch = useAppDispatch();
 
 	const handleLogin = async (event) => {
 		event.preventDefault();
@@ -38,11 +37,11 @@ const Login = () => {
 		try {
 			const result = await loginUser(loginData);
 
-			dispatch(setUserAction(result));
+			appDispatch(setUserAction(result));
 
 			if (result.successful) {
 				localStorage.setItem('userToken', result.result);
-				store.dispatch(fetchCurrentUserThunk(result.result));
+				appDispatch(fetchCurrentUserThunk(result.result));
 				navigate('/courses');
 			} else {
 				setErrorMessage('Invalid credentials. Please try again.');

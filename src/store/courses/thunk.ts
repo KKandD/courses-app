@@ -41,7 +41,7 @@ export const updateCourseThunk = (
 	};
 };
 
-export const fetchCoursesThunk = () => async (dispatch) => {
+export const fetchCoursesThunk = () => async (dispatch: Dispatch) => {
 	try {
 		const coursesData = await fetchCourses();
 		dispatch(saveCoursesAction(coursesData));

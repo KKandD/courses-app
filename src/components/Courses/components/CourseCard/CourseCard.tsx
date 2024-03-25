@@ -6,17 +6,16 @@ import { Link } from 'react-router-dom';
 import { getCourseDuration } from 'src/helpers/getCourseDuration';
 import { RootState } from '../../../../store/rootReducer';
 import { deleteCourseThunk } from '../../../../store/courses/thunk';
-import store from '../../../../store/index.js';
+import { useAppDispatch } from 'src/hooks';
 
 const CourseCard: React.FC<CourseCardProps> = (props) => {
 	const formattedDuration = getCourseDuration(props.course.duration);
 	const user = useSelector((state: RootState) => state.user);
+	const appDispatch = useAppDispatch();
 
 	const handleDeleteCourse = () => {
-		store.dispatch(deleteCourseThunk(props.course.id, user.token));
+		appDispatch(deleteCourseThunk(props.course.id, user.token));
 	};
-
-	// The Update button has no functionality in this module, it will be added in the next module
 
 	return (
 		<div className='card my-5'>

@@ -6,19 +6,16 @@ import { Course } from '../Courses/Course.types';
 import { AuthorType } from 'src/store/authors/types';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/rootReducer';
-import {
-	addNewCourseThunk,
-	fetchCoursesThunk,
-	updateCourseThunk,
-} from 'src/store/courses/thunk';
-import store from '../../../src/store/index.js';
+import { addNewCourseThunk, updateCourseThunk } from 'src/store/courses/thunk';
 import { addNewAuthorThunk } from 'src/store/authors/thunk';
 import { UpdateCourseType } from 'src/store/courses/types';
+import { useAppDispatch } from 'src/hooks';
 
 const CourseForm = () => {
 	const navigate = useNavigate();
 	const { courseId } = useParams();
 	const courses = useSelector((state: RootState) => state.courses);
+	const appDispatch = useAppDispatch();
 
 	useEffect(() => {
 		if (courseId) {
@@ -74,7 +71,7 @@ const CourseForm = () => {
 
 				//dispatch(saveAuthorsAction([...authors, newAuthor]));
 				//dispatch(addNewAuthorAction(newAuthor));
-				store.dispatch(addNewAuthorThunk(newAuthor, token));
+				appDispatch(addNewAuthorThunk(newAuthor, token));
 				setCourseAuthorsList([...courseAuthorsList, newAuthor]);
 			}
 
@@ -130,7 +127,7 @@ const CourseForm = () => {
 				authors: courseAuthorsList.map((author) => author.id),
 			};
 			console.log('updating course');
-			store.dispatch(updateCourseThunk(courseId, updatedCourse, token));
+			appDispatch(updateCourseThunk(courseId, updatedCourse, token));
 		} else {
 			const newCourse: Course = {
 				id: '',
@@ -142,7 +139,7 @@ const CourseForm = () => {
 			};
 			//dispatch(saveAuthorsAction([...authors, ...courseAuthorsList]));
 			//dispatch(addNewCourseAction(newCourse));
-			store.dispatch(addNewCourseThunk(newCourse, token));
+			appDispatch(addNewCourseThunk(newCourse, token));
 			console.log('creating course');
 		}
 

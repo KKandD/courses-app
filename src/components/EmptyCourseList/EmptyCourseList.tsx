@@ -1,18 +1,18 @@
 import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Button from 'src/common/Button/Button';
 import { RootState } from '../../../src/store/rootReducer';
 import { Link } from 'react-router-dom';
-import store from '../../../src/store/index.js';
 import { fetchAuthorsThunk } from '../../../src/store/authors/thunk';
+import { useAppDispatch } from 'src/hooks';
 
 const EmptyCourseList = () => {
 	const userRole = useSelector((state: RootState) => state.user.role);
-	const dispatch = useDispatch();
+	const appDispatch = useAppDispatch();
 
 	useEffect(() => {
-		store.dispatch(fetchAuthorsThunk());
-	}, [dispatch]);
+		appDispatch(fetchAuthorsThunk());
+	}, [appDispatch]);
 
 	const renderButtonOrMessage = () => {
 		if (userRole === 'admin') {

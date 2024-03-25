@@ -5,27 +5,27 @@ import Button from 'src/common/Button/Button';
 import { getAuthorsForCourse } from 'src/helpers/getAuthorsForCourse';
 import { Link } from 'react-router-dom';
 import { RootState } from '../../store/rootReducer';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { fetchCurrentUserThunk } from '../../store/user/thunk';
-import store from '../../../src/store/index.js';
 import { fetchCoursesThunk } from '../../../src/store/courses/thunk';
 import { fetchAuthorsThunk } from '../../../src/store/authors/thunk';
+import { useAppDispatch } from 'src/hooks';
 
 const Courses = () => {
 	const courses = useSelector((state: RootState) => state.courses);
 	const authors = useSelector((state: RootState) => state.authors);
 	const userRole = useSelector((state: RootState) => state.user.role);
-	const dispatch = useDispatch();
+	const appDispatch = useAppDispatch();
 
 	useEffect(() => {
-		store.dispatch(fetchCoursesThunk());
-		store.dispatch(fetchAuthorsThunk());
-	}, [dispatch]);
+		appDispatch(fetchCoursesThunk());
+		appDispatch(fetchAuthorsThunk());
+	}, [appDispatch]);
 
 	useEffect(() => {
 		const token = localStorage.getItem('userToken');
 		if (token) {
-			store.dispatch(fetchCurrentUserThunk(token));
+			appDispatch(fetchCurrentUserThunk(token));
 		}
 	}, [userRole]);
 
