@@ -18,6 +18,7 @@ import { RootState } from '../src/store/rootReducer';
 import { fetchCurrentUserThunk } from './store/user/thunk';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import { useAppDispatch } from './hooks';
+import { fetchCoursesThunk } from './store/courses/thunk';
 
 function App() {
 	const navigate = useNavigate();
@@ -28,9 +29,11 @@ function App() {
 	const user = useSelector((state: RootState) => state.user);
 
 	useEffect(() => {
-		if (user.token) {
+		const token = localStorage.getItem('userToken');
+		if (token) {
 			setIsAuthenticated(true);
-			appDispatch(fetchCurrentUserThunk(user.token));
+			appDispatch(fetchCurrentUserThunk(token));
+			appDispatch(fetchCoursesThunk());
 		} else {
 			setIsAuthenticated(false);
 			if (location.pathname !== '/registration') {
