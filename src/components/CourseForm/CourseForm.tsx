@@ -148,7 +148,7 @@ const CourseForm = () => {
 	};
 
 	return (
-		<div className='container'>
+		<div data-testid='course-form'>
 			<div className='row justify-content-center'>
 				<div className='col-md-7 col-lg-8'>
 					<h4 className='mb-3'>Create New Course</h4>
