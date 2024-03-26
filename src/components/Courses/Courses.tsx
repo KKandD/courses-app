@@ -3,7 +3,7 @@ import CourseCard from './components/CourseCard/CourseCard';
 import SearchBar from './components/SearchBar/SearchBar';
 import Button from 'src/common/Button/Button';
 import { getAuthorsForCourse } from 'src/helpers/getAuthorsForCourse';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { RootState } from '../../store/rootReducer';
 import { useSelector } from 'react-redux';
 import { fetchCurrentUserThunk } from '../../store/user/thunk';
@@ -16,6 +16,7 @@ const Courses = () => {
 	const authors = useSelector((state: RootState) => state.authors);
 	const userRole = useSelector((state: RootState) => state.user.role);
 	const appDispatch = useAppDispatch();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		appDispatch(fetchCoursesThunk());
@@ -29,6 +30,10 @@ const Courses = () => {
 		}
 	}, [userRole]);
 
+	const handleNavigation = () => {
+		navigate('/courses/add');
+	};
+
 	return (
 		<div className='courses-list'>
 			<div className='row justify-content-between mt-5'>
@@ -37,9 +42,9 @@ const Courses = () => {
 				</div>
 				<div className='col-md-2 d-flex justify-content-end'>
 					{userRole === 'admin' && (
-						<Link to='/courses/add'>
-							<Button buttonText='Add New Course' />
-						</Link>
+						//<Link to='/courses/add'>
+						<Button buttonText='Add New Course' onClick={handleNavigation} />
+						//</Link>
 					)}
 				</div>
 			</div>

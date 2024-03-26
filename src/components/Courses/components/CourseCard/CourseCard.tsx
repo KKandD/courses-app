@@ -18,7 +18,7 @@ const CourseCard: React.FC<CourseCardProps> = (props) => {
 	};
 
 	return (
-		<div className='card my-5'>
+		<div className='card my-5' data-testid='course-card'>
 			<div className='card-header'>
 				<h5>{props.course.title}</h5>
 			</div>
